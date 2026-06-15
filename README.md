@@ -86,14 +86,12 @@ Tutte in `config.py`:
 ## Come partire
 
 ```bash
-# 1. attiva il venv del corso (stesso di Lez07) — o installa da requirements.txt
-# 2. completa i TODO, poi lancia il giudice
+# 1. attiva il venv del corso (lo stesso della scorsa lezione) o installa da requirements.txt
+# 2. completa i TODO, poi lancia il "codice giudice" (spero di averlo scritto bene 😊)
 python scripts/evaluate.py
 ```
 
-Il default è `EMBEDDER = "minilm-it"`: parte **senza chiave** (modello locale,
-si scarica la prima volta). Se vuoi provare `openai`, copia `.env.example` in
-`.env` e metti la chiave.
+Il default è `EMBEDDER = "minilm-it"`: parte **senza chiave** (modello locale che si scarica solo la prima volta). Se vuoi provare `openai`, copia `.env.example` in `.env` e metti la chiave.
 
 ## Struttura del progetto
 
@@ -101,17 +99,20 @@ si scarica la prima volta). Se vuoi provare `openai`, copia `.env.example` in
 S07_Capstone_Retrieval/
 ├── README.md            # questa consegna
 ├── config.py            # TUTTI i parametri (le 3 leve)
-├── .env.example         # template dei segreti
+├── .env.example         # template dei secrets
 ├── requirements.txt
 ├── data/
 │   ├── corpus/          # 8 documenti .md (Qdrant + Pinecone)
 │   └── gold/queries.json# le domande con la fonte attesa
+├── solution/            # risolto da me, non guardarlo :)
+│   ├── ingest.py
+│   └── retrieve.py
 ├── src/
 │   ├── embeddings.py    # factory: cambi modello con una stringa
 │   ├── ingest.py        # load → chunk → embed → upsert   (2 TODO)
 │   └── retrieve.py      # query → search → top_k          (1 TODO)
 └── scripts/
-    └── evaluate.py      # il giudice (hit@k) — NON si tocca
+    └── evaluate.py      # il giudice (hit@k). Non toccatelo salvo errori miei :)
 ```
 
 ## Sfide bonus (per chi finisce prima)
