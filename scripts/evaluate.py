@@ -34,7 +34,7 @@ def main():
     print("=" * 70)
     print(f"  EMBEDDER={config.EMBEDDER}  TOP_K={config.TOP_K}  "
           f"max_char={config.CHUNK_MAX_CHAR}  overlap={config.CHUNK_OVERLAP}  "
-          f"structure_aware={config.STRUCTURE_AWARE}")
+          f"chunker={config.CHUNKER}")
     print("=" * 70)
 
     embedder = get_embedder(config.EMBEDDER)

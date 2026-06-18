@@ -2,7 +2,7 @@
 config.py — L'UNICO posto in cui si toccano i parametri della pipeline.
 
 Regola d'ordine della challenge: nessun numero "magico" sparso nel codice.
-Vuoi cambiare modello, chunking o numero di risultati? Si cambia QUI, una riga,
+Vuoi cambiare chunker, modello o numero di risultati? Si cambia QUI, una riga,
 e si rilancia `python scripts/evaluate.py`. Il resto del codice legge da qui.
 """
 from pathlib import Path
@@ -22,9 +22,11 @@ GOLD_PATH  = BASE_DIR / "data" / "gold" / "queries.json"
 EMBEDDER = "minilm-it"
 
 # ── LEVA 2 · Chunking ────────────────────────────────────────────────────────
+# Valori ammessi: "naive" | "structure_aware"
+# Nel primo confronto cambia solo questo parametro.
 CHUNK_MAX_CHAR  = 600     # dimensione massima del chunk in caratteri
 CHUNK_OVERLAP   = 0       # sovrapposizione tra chunk consecutivi
-STRUCTURE_AWARE = True    # True = segue i titoli e non spezza i blocchi di codice
+CHUNKER = "naive"         # "naive" = taglio fisso, "structure_aware" = rispetta la struttura
 
 # ── LEVA 3 · Retrieval ───────────────────────────────────────────────────────
 TOP_K = 3                 # quanti chunk recuperare per ogni query

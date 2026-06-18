@@ -14,7 +14,7 @@ def retrieve(store, embedder, query: str, k: int | None = None) -> list:
     """
     k = k or config.TOP_K
 
-    # ── TODO · Recupero ──────────────────────────────────────────────────────
+    # ── TODO 5 · Recupero ────────────────────────────────────────────────────
     # 1) embedda la domanda:        q_vec = embedder.embed_query(query)
     # 2) interroga lo store:        store.search(collection_name=config.COLLECTION,
     #                                            query_vector=q_vec, k=k)
@@ -22,7 +22,9 @@ def retrieve(store, embedder, query: str, k: int | None = None) -> list:
     #    -> passa vector_name="dense".
     risultati = None  # TODO
 
-    assert risultati is not None, "TODO non completato: `risultati` è ancora None."
+    # ── La seguente riga va tolta quando il TODO è completato:  ────────────
+    assert risultati is not None, "TODO 5 non completato: `risultati` è ancora None."
+    # --------------------------------------------------------------------------
     return risultati
 
 

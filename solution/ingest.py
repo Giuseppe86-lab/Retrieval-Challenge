@@ -64,7 +64,16 @@ def _chunk_structure_aware(file: str, testo: str) -> list[dict]:
 
 
 def chunk_corpus(docs: dict[str, str]) -> list[dict]:
-    fn = _chunk_structure_aware if config.STRUCTURE_AWARE else _chunk_naive
+    chunkers = {
+        "naive": _chunk_naive,
+        "structure_aware": _chunk_structure_aware,
+    }
+    if config.CHUNKER not in chunkers:
+        raise ValueError(
+            f"CHUNKER non valido: {config.CHUNKER!r}. "
+            "Valori ammessi: 'naive', 'structure_aware'."
+        )
+    fn = chunkers[config.CHUNKER]
     chunks = []
     for nome, testo in docs.items():
         chunks.extend(fn(nome, testo))
@@ -75,7 +84,7 @@ def build_index(embedder) -> QdrantVectorstore:
     docs = load_corpus()
     chunks = chunk_corpus(docs)
     print(f"Corpus: {len(docs)} documenti -> {len(chunks)} chunk "
-          f"(structure_aware={config.STRUCTURE_AWARE}, max_char={config.CHUNK_MAX_CHAR})")
+          f"(chunker={config.CHUNKER}, max_char={config.CHUNK_MAX_CHAR})")
 
     # ── TODO 1 risolto ───────────────────────────────────────────────────────
     vettori = embedder.embed_passages([c["text"] for c in chunks])
