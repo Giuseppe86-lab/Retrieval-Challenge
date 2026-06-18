@@ -79,9 +79,7 @@ Tutte in `config.py`:
    ma in una RAG vera significa più rumore passato al modello. Qual è il
    compromesso?
 
-> ⚠️ Inghippo utile: ogni modello ha una **dimensione vettoriale diversa**. Lo
-> starter ricrea la collection con la dimensione giusta leggendo `embedder.dim`,
-> quindi puoi cambiare modello senza pensarci — ma ricordati *perché* serve.
+> ⚠️ Inghippo utile: ogni modello ha una **dimensione vettoriale diversa**. Lo starter ricrea la collection con la dimensione giusta leggendo `embedder.dim`, quindi puoi cambiare modello senza pensarci — ma ricordati *perché* serve.
 
 ## Come partire
 
