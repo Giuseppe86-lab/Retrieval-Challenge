@@ -19,14 +19,17 @@ GOLD_PATH  = BASE_DIR / "data" / "gold" / "queries.json"
 #   e5-small   -> intfloat/multilingual-e5-small        (384 dim, gratis, locale)
 #   bge-m3     -> BAAI/bge-m3                            (1024 dim, gratis, pesante)
 # I modelli locali si scaricano alla prima esecuzione (serve connessione una volta).
-EMBEDDER = "minilm-it"
+EMBEDDER = "minilm-en"   # baseline DEBOLE di proposito: modello solo-inglese su corpus ITALIANO.
+                         # Prima vittoria da scoprire: passare a un modello che capisce l'italiano
+                         # (minilm-it / e5-small / bge-m3).
 
 # ── LEVA 2 · Chunking ────────────────────────────────────────────────────────
-# Valori ammessi: "naive" | "structure_aware"
-# Nel primo confronto cambia solo questo parametro.
-CHUNK_MAX_CHAR  = 600     # dimensione massima del chunk in caratteri
-CHUNK_OVERLAP   = 0       # sovrapposizione tra chunk consecutivi
-CHUNKER = "naive"         # "naive" = taglio fisso, "structure_aware" = rispetta la struttura
+CHUNK_MAX_CHAR  = 1500    # baseline DEBOLE: chunk grossi e grezzi (contesto impreciso). Seconda
+CHUNK_OVERLAP   = 0       # vittoria: chunk più piccoli + overlap, o chunking strutturato.
+CHUNKER = "naive"         # baseline: taglio a caratteri fissi (ignora la struttura).
+# Per un chunking che RISPETTA la struttura non basta cambiare questa stringa: è il
+# lavoro di DoclingParser + RecursiveSplitter (come nel demo). Si fa riscrivendo
+# build_index in src/ingest.py — è una delle strade per alzare hit@1 (vedi README).
 
 # ── LEVA 3 · Retrieval ───────────────────────────────────────────────────────
 TOP_K = 3                 # quanti chunk recuperare per ogni query

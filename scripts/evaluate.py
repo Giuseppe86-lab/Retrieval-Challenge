@@ -62,7 +62,7 @@ def main():
     n = len(gold)
     print("\n" + "-" * 70)
     for k in livelli:
-        etichetta = "  <- punteggio principale (ranking)" if k == 1 else ""
+        etichetta = "  <- PUNTEGGIO (ranking)" if k == 1 else "  · solo spareggio"
         print(f"  hit@{k} = {hits[k]:>2}/{n}  ({100*hits[k]/n:>3.0f}%){etichetta}")
     print("-" * 70)
 
