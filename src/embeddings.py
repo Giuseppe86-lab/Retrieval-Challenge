@@ -57,7 +57,7 @@ class _STEmbedder:
 # Registro: nome in config.py -> come costruire l'embedder.
 _REGISTRY = {
     "openai":    lambda: _OpenAIEmbedder(),
-    "minilm-en": lambda: _STEmbedder("all-MiniLM-L6-v2", 384),   # SOLO inglese (apposta)
+    "minilm-en": lambda: _STEmbedder("all-MiniLM-L6-v2", 384),   # SOLO inglese 
     "minilm-it": lambda: _STEmbedder("paraphrase-multilingual-MiniLM-L12-v2", 384),
     "e5-small":  lambda: _STEmbedder("intfloat/multilingual-e5-small", 384,
                                      query_prefix="query: ", passage_prefix="passage: "),

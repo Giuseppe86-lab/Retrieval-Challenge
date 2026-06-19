@@ -80,9 +80,8 @@ indovinato.
 │   ├── embeddings.py    # factory dei modelli: cambi modello con una stringa
 │   ├── ingest.py        # BASELINE: load → chunk → embed → Qdrant  (riscrivibile)
 │   └── retrieve.py      # BASELINE: query → search → top_k          (riscrivibile)
-├── scripts/
-│   └── evaluate.py      # il giudice (hit@k). NON si tocca.
-└── solution/            # riferimento per il docente — non sbirciare :)
+└── scripts/
+    └── evaluate.py      # il giudice (hit@k). NON si tocca.
 ```
 
 ## Sfide bonus (per chi vola)
