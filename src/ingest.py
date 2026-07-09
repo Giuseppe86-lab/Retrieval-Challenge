@@ -108,6 +108,8 @@ def build_index(embedder) -> QdrantVectorstore:
     )
 
     # Ingeriamo file per file per attaccare metadata specifici per sorgente.
+    
+    #leggermente diverso dalla demo perché load_corpus ritorna un dizionario {nome_file: testo}
     for file_name in docs.keys():
         file_path = str(Path(config.CORPUS_DIR) / file_name)
         ingestion.run(file_path=file_path, metadata={"file": file_name})
