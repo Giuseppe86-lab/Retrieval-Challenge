@@ -6,14 +6,33 @@ Puoi riscrivere `retrieve` come vuoi (riscrittura query, hybrid, reranking…) p
 mantenga questo contratto.
 """
 import config
+from datapizza.pipeline import DagPipeline
+
+class QueryEmbedder:
+    def __init__(self, embedder):
+        self.embedder = embedder
+    def __call__(self, text: str) -> dict:
+        return self.embedder.embed_query(text)
 
 
 def retrieve(store, embedder, query: str, k: int | None = None) -> list:
     """Ritorna i `k` chunk più simili alla query. Se k è None usa config.TOP_K."""
     k = k or config.TOP_K
-    q_vec = embedder.embed_query(query)
-    return store.search(collection_name=config.COLLECTION,
-                        query_vector=q_vec, k=k, vector_name="dense")
+    #q_vec = embedder.embed_query(query)
+    dag = DagPipeline()
+    dag.add_module("embedder", QueryEmbedder(embedder))
+    dag.add_module("retriever", store.as_retriever())
+
+    dag.connect("embedder", "retriever", target_key="query_vector")
+    out = dag.run(
+        {
+            "embedder": {"text": query},
+            "retriever": {"collection_name": config.COLLECTION, "k": k},
+        }
+    )
+    return out["retriever"]
+    #return store.search(collection_name=config.COLLECTION,
+    #                    query_vector=q_vec, k=k, vector_name="dense")
 
 
 # ── Bonus (facoltativo) · retrieval ristretto a un file via filtro sui metadati ──

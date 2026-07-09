@@ -34,6 +34,9 @@ class _OpenAIEmbedder:
     def embed_query(self, testo: str) -> list[float]:
         return self._e.embed(testo)
 
+    def embed(self, testo: str | list[str], model_name: str | None = None):
+        return self._e.embed(testo)
+
 
 class _STEmbedder:
     """Wrapper su un modello sentence-transformers locale e gratuito."""
@@ -52,6 +55,11 @@ class _STEmbedder:
 
     def embed_query(self, testo: str) -> list[float]:
         return self._m.encode(self._qp + testo, normalize_embeddings=True).tolist()
+
+    def embed(self, testo: str | list[str], model_name: str | None = None):
+        if isinstance(testo, str):
+            return self.embed_query(testo)
+        return self.embed_passages(testo)
 
 
 # Registro: nome in config.py -> come costruire l'embedder.

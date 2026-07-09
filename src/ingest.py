@@ -24,7 +24,7 @@ from datapizza.core.vectorstore import VectorConfig, Distance
 
 from datapizza.pipeline import IngestionPipeline
 from datapizza.modules.parsers.docling import DoclingParser
-from datapizza.modules.splitters.recursive import RecursiveSplitter
+from datapizza.modules.splitters import RecursiveSplitter
 from datapizza.embedders import ChunkEmbedder
 
 
@@ -110,7 +110,7 @@ def build_index(embedder) -> QdrantVectorstore:
         file_path = str(Path(config.CORPUS_DIR) / file_name)
         ingestion.run(file_path=file_path, metadata={"file": file_name})
 
-    chunks = list(vector_store.dump_collection(COLLECTION))
+    chunks = list(store.dump_collection(config.COLLECTION))
     print(f"Corpus: {len(docs)} documenti -> {len(chunks)} chunk "
           f"(chunker={config.CHUNKER}, max_char={config.CHUNK_MAX_CHAR}, "
           f"overlap={config.CHUNK_OVERLAP})")
