@@ -6,8 +6,10 @@ Puoi riscrivere `retrieve` come vuoi (riscrittura query, hybrid, reranking…) p
 mantenga questo contratto.
 """
 import config
+#Librerie da importare per usare dag pipeline come nel lab demo
 from datapizza.pipeline import DagPipeline
 
+#Classe da definire per usare dag pipeline come nel lab demo conseguenza sempre del wrapper su embedder
 class QueryEmbedder:
     def __init__(self, embedder):
         self.embedder = embedder

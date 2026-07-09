@@ -22,6 +22,8 @@ from datapizza.modules.splitters import TextSplitter
 from datapizza.vectorstores.qdrant import QdrantVectorstore
 from datapizza.core.vectorstore import VectorConfig, Distance
 
+
+#Librerie da importare per usare ingestion pipeline come nel lab demo
 from datapizza.pipeline import IngestionPipeline
 from datapizza.modules.parsers.docling import DoclingParser
 from datapizza.modules.splitters import RecursiveSplitter
