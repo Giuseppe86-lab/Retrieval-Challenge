@@ -18,9 +18,14 @@ from pathlib import Path
 
 import config
 from datapizza.modules.splitters import TextSplitter
-from datapizza.type import Chunk, DenseEmbedding
+#from datapizza.type import Chunk, DenseEmbedding
 from datapizza.vectorstores.qdrant import QdrantVectorstore
 from datapizza.core.vectorstore import VectorConfig, Distance
+
+from datapizza.pipeline import IngestionPipeline
+from datapizza.modules.parsers.docling import DoclingParser
+from datapizza.modules.splitters.recursive import RecursiveSplitter
+from datapizza.embedders import ChunkEmbedder
 
 
 # ── 1. Caricamento del corpus ────────────────────────────────────────────────
@@ -71,29 +76,52 @@ def build_index(embedder) -> QdrantVectorstore:
     spezzare con RecursiveSplitter (overlap) per rispettare la struttura, come nel demo.
     L'importante è che retrieve() resti interrogabile e che ogni chunk porti metadata["file"].
     """
+    EMB_NAME = "dense"
     docs = load_corpus()
-    chunks = chunk_corpus(docs)
-    print(f"Corpus: {len(docs)} documenti -> {len(chunks)} chunk "
-          f"(chunker={config.CHUNKER}, max_char={config.CHUNK_MAX_CHAR}, "
-          f"overlap={config.CHUNK_OVERLAP})")
+    
+    #chunks = chunk_corpus(docs)
 
     # Embedding di tutti i chunk in un colpo solo.
-    vettori = embedder.embed_passages([c["text"] for c in chunks])
+    #vettori = embedder.embed_passages([c["text"] for c in chunks])
 
     # Collection nuova, dimensionata sul modello scelto.
     store = QdrantVectorstore(location=":memory:")
     store.create_collection(
         collection_name=config.COLLECTION,
-        vector_config=[VectorConfig(name="dense", dimensions=embedder.dim,
+        vector_config=[VectorConfig(name=EMB_NAME, dimensions=embedder.dim,
                                     distance=Distance.COSINE)],
     )
 
-    # Carica i chunk (testo + vettore + metadata) su Qdrant.
-    store.add(
-        [Chunk(id=c["id"], text=c["text"],
-               embeddings=[DenseEmbedding(name="dense", vector=v)],
-               metadata=c["metadata"])
-         for c, v in zip(chunks, vettori)],
+    ingestion = IngestionPipeline(
+        modules=[
+            DoclingParser(),
+            RecursiveSplitter(
+                max_char=config.CHUNK_MAX_CHAR,
+                overlap=config.CHUNK_OVERLAP
+            ),
+            ChunkEmbedder(client=embedder, embedding_name=EMB_NAME),
+        ],
+        vector_store=store,
         collection_name=config.COLLECTION,
     )
+
+    # Ingeriamo file per file per attaccare metadata specifici per sorgente.
+    for file_name in docs.keys():
+        file_path = str(Path(config.CORPUS_DIR) / file_name)
+        ingestion.run(file_path=file_path, metadata={"file": file_name})
+
+    chunks = list(vector_store.dump_collection(COLLECTION))
+    print(f"Corpus: {len(docs)} documenti -> {len(chunks)} chunk "
+          f"(chunker={config.CHUNKER}, max_char={config.CHUNK_MAX_CHAR}, "
+          f"overlap={config.CHUNK_OVERLAP})")
+
+    # Carica i chunk (testo + vettore + metadata) su Qdrant.
+    #store.add(
+    #    [Chunk(id=c["id"], text=c["text"],
+    #           embeddings=[DenseEmbedding(name="dense", vector=v)],
+    #           metadata=c["metadata"])
+    #     for c, v in zip(chunks, vettori)],
+    #    collection_name=config.COLLECTION,
+    #)
     return store
+
